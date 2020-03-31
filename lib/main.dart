@@ -1,16 +1,36 @@
+import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:english_words/english_words.dart';
 import 'package:flutter/material.dart';
 
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-        title: 'Startup Name Generator',
-        theme: ThemeData(primaryColor: Colors.white),
-        home: RandomWords());
+    return DynamicTheme(
+      defaultBrightness: Brightness.light,
+      data: (brightness) => _buildTheme(brightness),
+      themedWidgetBuilder: (context, theme) => MaterialApp(
+          title: 'Startup Name Generator', theme: theme, home: RandomWords()),
+    );
+  }
+
+  ThemeData _buildTheme(Brightness brightness) {
+    return brightness == Brightness.dark
+        ? ThemeData.dark().copyWith(
+            textTheme: ThemeData.dark().textTheme.apply(
+                  bodyColor: Colors.white,
+                  displayColor: Colors.white,
+                  fontFamily: 'Basier',
+                ),
+            backgroundColor: Colors.black)
+        : ThemeData.light().copyWith(
+            textTheme: ThemeData.light().textTheme.apply(
+                  bodyColor: Colors.black,
+                  displayColor: Colors.black,
+                  fontFamily: 'Basier',
+                ),
+            backgroundColor: Colors.white);
   }
 }
 
@@ -74,11 +94,22 @@ class RandomWordsState extends State<RandomWords> {
           IconButton(
             icon: Icon(Icons.list),
             onPressed: pushSaved,
+          ),
+          IconButton(
+            icon: Icon(Icons.brightness_2),
+            onPressed: changeDarkMode,
           )
         ],
       ),
       body: buildSuggestions(),
     );
+  }
+
+  void changeDarkMode() {
+    DynamicTheme.of(context).setBrightness(
+        Theme.of(context).brightness == Brightness.dark
+            ? Brightness.light
+            : Brightness.dark);
   }
 
   void pushSaved() {
