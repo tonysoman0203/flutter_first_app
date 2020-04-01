@@ -1,9 +1,14 @@
 import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:english_words/english_words.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_first_app/src/ui/views/my_map.dart';
+import 'package:flutter_first_app/src/ui/views/weather_view.dart';
 
-void main() => runApp(MyApp());
+Future main() async {
+  await DotEnv().load('.env');
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   @override
@@ -106,7 +111,7 @@ class RandomWordsState extends State<RandomWords> {
           ),
           IconButton(
             icon: Icon(Icons.wb_cloudy),
-            onPressed: null,
+            onPressed: navigateToWeatherView,
           )
         ],
       ),
@@ -125,6 +130,13 @@ class RandomWordsState extends State<RandomWords> {
     Navigator.of(context)
         .push(MaterialPageRoute<void>(builder: (BuildContext context) {
       return MyMap();
+    }));
+  }
+
+  void navigateToWeatherView() {
+    Navigator.of(context)
+        .push(MaterialPageRoute<void>(builder: (BuildContext context) {
+      return WeatherView();
     }));
   }
 
