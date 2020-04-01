@@ -3,7 +3,7 @@
 A flutter starter app to learn from google codelab.
 
 ## Walkthough
-<img src="./demo.gif" width="480" height="720">
+<img src="./demo.gif">
 
 ## Getting Started
 
