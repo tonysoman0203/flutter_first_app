@@ -1,8 +1,14 @@
 import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:english_words/english_words.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_first_app/src/ui/views/my_map.dart';
+import 'package:flutter_first_app/src/ui/views/weather_view.dart';
 
-void main() => runApp(MyApp());
+Future main() async {
+  await DotEnv().load('.env');
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   @override
@@ -92,12 +98,20 @@ class RandomWordsState extends State<RandomWords> {
         title: Text('Startup Name Generator'),
         actions: <Widget>[
           IconButton(
-            icon: Icon(Icons.list),
+            icon: Icon(Icons.shopping_cart),
             onPressed: pushSaved,
           ),
           IconButton(
             icon: Icon(Icons.brightness_2),
             onPressed: changeDarkMode,
+          ),
+          IconButton(
+            icon: Icon(Icons.map),
+            onPressed: navigateToMapView,
+          ),
+          IconButton(
+            icon: Icon(Icons.wb_cloudy),
+            onPressed: navigateToWeatherView,
           )
         ],
       ),
@@ -110,6 +124,20 @@ class RandomWordsState extends State<RandomWords> {
         Theme.of(context).brightness == Brightness.dark
             ? Brightness.light
             : Brightness.dark);
+  }
+
+  void navigateToMapView() {
+    Navigator.of(context)
+        .push(MaterialPageRoute<void>(builder: (BuildContext context) {
+      return MyMap();
+    }));
+  }
+
+  void navigateToWeatherView() {
+    Navigator.of(context)
+        .push(MaterialPageRoute<void>(builder: (BuildContext context) {
+      return WeatherView();
+    }));
   }
 
   void pushSaved() {
