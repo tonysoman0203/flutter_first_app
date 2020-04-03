@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_first_app/src/locations.dart' as locations;
+import 'package:flutter_first_app/src/models/locations.dart' as locations;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class MyMap extends StatefulWidget {

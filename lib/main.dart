@@ -1,23 +1,47 @@
+import 'package:bloc/bloc.dart';
 import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:english_words/english_words.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_first_app/src/bloc/blocs.dart';
+import 'package:flutter_first_app/src/delegate/delegate.dart';
+import 'package:flutter_first_app/src/drivers/apiClient/OpenWeatherApiClient.dart';
+import 'package:flutter_first_app/src/repositories/repositories.dart';
 import 'package:flutter_first_app/src/ui/views/my_map.dart';
 import 'package:flutter_first_app/src/ui/views/weather_view.dart';
 
 Future main() async {
   await DotEnv().load('.env');
-  runApp(MyApp());
+
+  BlocSupervisor.delegate = SimpleBlocDelegate();
+
+  final WeatherRepository weatherRepository =
+      WeatherRepository(weatherApiClient: OpenWeatherApiClient());
+
+  runApp(MyApp(weatherRepository: weatherRepository));
 }
 
 class MyApp extends StatelessWidget {
+  final WeatherRepository weatherRepository;
+
+  MyApp({Key key, @required this.weatherRepository})
+      : assert(weatherRepository != null),
+        super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return DynamicTheme(
       defaultBrightness: Brightness.light,
       data: (brightness) => _buildTheme(brightness),
-      themedWidgetBuilder: (context, theme) => MaterialApp(
-          title: 'Startup Name Generator', theme: theme, home: RandomWords()),
+      themedWidgetBuilder: (context, theme) => BlocProvider(
+        create: (context) => WeatherBloc(weatherRepository: weatherRepository),
+        child: MaterialApp(
+          title: 'Startup Name Generator',
+          theme: theme,
+          home: RandomWords(),
+        ),
+      ),
     );
   }
 

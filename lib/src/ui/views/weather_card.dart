@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_first_app/src/openweather.dart';
+import 'package:flutter_first_app/src/models/openweather.dart';
 
 class WeatherCard extends StatelessWidget {
   final OpenWeather appWeather;
@@ -20,7 +20,9 @@ class WeatherCard extends StatelessWidget {
               Image.network(appWeather.weather[0].imageUrl),
               Text(appWeather.name),
               Text(appWeather.main.temp.toString() + '\u2103'),
-              Text(appWeather.main.humidity.toString() + '%')
+              Text(appWeather.main.humidity.toString() + '%'),
+              Text(DateTime.fromMillisecondsSinceEpoch(appWeather.dt * 1000)
+                  .toString())
             ],
           ),
         ),

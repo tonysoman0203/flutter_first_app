@@ -1,8 +1,3 @@
-import 'dart:convert';
-import 'dart:io';
-
-import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:http/http.dart' as http;
 import 'package:json_annotation/json_annotation.dart';
 
 part 'openweather.g.dart';
@@ -140,27 +135,4 @@ class Coord {
   factory Coord.fromJson(Map<String, dynamic> json) => _$CoordFromJson(json);
 
   Map<String, dynamic> toJson() => _$CoordToJson(this);
-}
-
-Future<OpenWeather> fetchOpenWeather(String location) async {
-  var openWeatherApiDomain = DotEnv().env['OPEN_WEATHER_API'];
-
-  var map = new Map<String, dynamic>();
-  map["q"] = jsonEncode(location);
-  map["units"] = "metrics";
-
-  var appId = DotEnv().env['API_OPEN_WEATHER_KEY'];
-
-  var API = "${openWeatherApiDomain}?q=${location}&appId=${appId}&units=metric";
-  final response = await http.post(API);
-
-  if (response.statusCode == 200) {
-    print(json.decode(response.body));
-    return OpenWeather.fromJson(json.decode(response.body));
-  } else {
-    throw HttpException(
-        'Unexpected status code ${response.statusCode}:'
-        ' ${response.reasonPhrase}',
-        uri: Uri.parse(API));
-  }
 }
