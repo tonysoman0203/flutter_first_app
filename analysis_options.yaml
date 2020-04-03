@@ -2,7 +2,8 @@ include: package:pedantic/analysis_options.yaml
 
 analyzer:
   exclude:
-    - lib/src/locations.g.dart
+    - lib/src/models/locations.g.dart
+    - lib/src/models/openweather.g.dart
 
 linter:
   rules:
