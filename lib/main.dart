@@ -23,11 +23,11 @@ Future main() async {
 }
 
 class MyApp extends StatelessWidget {
-  final WeatherRepository weatherRepository;
-
   MyApp({Key key, @required this.weatherRepository})
       : assert(weatherRepository != null),
         super(key: key);
+
+  final WeatherRepository weatherRepository;
 
   @override
   Widget build(BuildContext context) {

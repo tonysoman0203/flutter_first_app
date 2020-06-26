@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_first_app/src/models/openweather.dart';
 
 class WeatherCard extends StatelessWidget {
+  WeatherCard({this.appWeather, this.index});
+
   final OpenWeather appWeather;
   final int index;
-
-  WeatherCard({this.appWeather, this.index});
 
   @override
   Widget build(BuildContext context) {
