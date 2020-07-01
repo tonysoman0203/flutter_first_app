@@ -34,7 +34,7 @@ dependencies:
   equatable: ^1.1.1
 
 dev_dependencies:
-  pedantic: 1.9.0
+  pedantic: 1.9.1
   build_runner: ^1.8.1
 
 
