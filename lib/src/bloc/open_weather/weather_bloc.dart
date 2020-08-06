@@ -8,7 +8,7 @@ import '../blocs.dart';
 
 class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
   WeatherBloc({@required this.weatherRepository})
-      : assert(weatherRepository != null);
+      : assert(weatherRepository != null), super(null);
 
   final WeatherRepository weatherRepository;
   final List<OpenWeather> weathers = [];
