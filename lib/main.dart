@@ -10,11 +10,13 @@ import 'package:flutter_first_app/src/drivers/apiClient/OpenWeatherApiClient.dar
 import 'package:flutter_first_app/src/repositories/repositories.dart';
 import 'package:flutter_first_app/src/ui/views/my_map.dart';
 import 'package:flutter_first_app/src/ui/views/weather_view.dart';
+import 'package:flutter/services.dart';
+import 'dart:async';
 
 Future main() async {
   await DotEnv().load('.env');
 
-  BlocSupervisor.delegate = SimpleBlocDelegate();
+  Bloc.observer = SimpleBlocDelegate();
 
   final WeatherRepository weatherRepository =
       WeatherRepository(weatherApiClient: OpenWeatherApiClient());
@@ -23,6 +25,7 @@ Future main() async {
 }
 
 class MyApp extends StatelessWidget {
+
   MyApp({Key key, @required this.weatherRepository})
       : assert(weatherRepository != null),
         super(key: key);
@@ -73,6 +76,9 @@ class RandomWordsState extends State<RandomWords> {
   final List<WordPair> suggestions = <WordPair>[];
   final TextStyle _biggerFont = const TextStyle(fontSize: 16);
   final Set<WordPair> saved = Set<WordPair>();
+  static const platformMethodChannel = const MethodChannel("getBatteryStatus");
+  String nativeMessage = null;
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   Widget buildSuggestions() {
     return ListView.builder(
@@ -118,6 +124,7 @@ class RandomWordsState extends State<RandomWords> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
         title: Text('Startup Name Generator'),
         actions: <Widget>[
@@ -136,6 +143,14 @@ class RandomWordsState extends State<RandomWords> {
           IconButton(
             icon: Icon(Icons.wb_cloudy),
             onPressed: navigateToWeatherView,
+          ),
+          IconButton(
+            icon: Icon(Icons.battery_std),
+            onPressed: getBatteryStatus,
+          ),
+          IconButton(
+            icon: Icon(Icons.camera),
+            onPressed: openCamera,
           )
         ],
       ),
@@ -162,6 +177,29 @@ class RandomWordsState extends State<RandomWords> {
         .push(MaterialPageRoute<void>(builder: (BuildContext context) {
       return WeatherView();
     }));
+  }
+
+  Future<void> getBatteryStatus () async {
+    String _message;
+    try {
+      final String result = await platformMethodChannel.invokeMethod('getBatteryStatus');
+      _message = result;
+    } on PlatformException catch (e) {
+      _message = 'Can’t do native stuff ${e.message}.';
+    }
+    setState(() {
+      nativeMessage = _message;
+    });
+    _scaffoldKey.currentState.showSnackBar(
+        SnackBar(
+          content: Text('battery $nativeMessage%'),
+          duration: Duration(milliseconds: 500),
+        )
+    );
+  }
+
+  Future<void> openCamera () async {
+    await platformMethodChannel.invokeMethod("takePhoto");
   }
 
   void pushSaved() {
