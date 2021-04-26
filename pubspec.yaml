@@ -31,7 +31,7 @@ dependencies:
   flutter_dotenv: ^2.1.0
   flutter_bloc: ^6.0.0
   meta: ^1.1.8
-  equatable: ^1.1.1
+  equatable: ^2.0.0
 
 dev_dependencies:
   pedantic: 1.9.2
